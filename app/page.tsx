@@ -1,18 +1,18 @@
 import AboutSection from "@/components/AboutSection";
-import AnimatedContent from "@/components/AnimatedContent";
 import HeroSection from "@/components/HeroSection";
 import Navbar from "@/components/Navbar";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export default function Home() {
   return (
-    <main className="min-h-screen overflow-y-hidden overflow-x-hidden bg-black">
-      {/* Navbar */}
+    <main className="min-h-screen bg-black overflow-x-hidden">
+      <SmoothScroll />
+
       <Navbar />
 
-        <HeroSection />
+      <HeroSection />
 
-        <AboutSection />
-
+      <AboutSection />
     </main>
   );
 }

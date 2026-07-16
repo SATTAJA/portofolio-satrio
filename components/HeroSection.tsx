@@ -26,8 +26,8 @@ function HeroSection() {
       <div className="container mx-auto flex min-h-screen items-center justify-between px-10 lg:px-24">
         {/* Left */}
         <div className="max-w-2xl text-white">
-          <div className="mb-5 flex items-center gap-3">
-            <span className="rounded bg-purple-600 px-3 py-1 font-mono text-sm shadow-lg shadow-purple-600/40">
+          <div className="mb-2 flex items-center gap-3">
+            <span className="rounded bg-purple-500 px-3 py-1 font-mono text-sm shadow-lg shadow-purple-600/40">
               Hello World!
             </span>
 
@@ -40,7 +40,7 @@ function HeroSection() {
             Satrio Aji Kusumo
           </h1>
 
-          <div className="mb-6 text-2xl font-medium text-purple-300">
+          <div className="mb-6 text-2xl font-medium hover:cursor-default transition-all duration-300">
             <ScrambledText
               radius={60}
               duration={1.2}
@@ -55,12 +55,12 @@ function HeroSection() {
         </div>
 
         {/* Right */}
-        <div className="hidden lg:block">
+        <div className="hidden lg:block hover:cursor-crosshair">
           <Image
             src="/ganteng.png"
             alt="Satrio Aji Kusumo"
-            width={480}
-            height={600}
+            width={600}
+            height={300}
             priority
             className="transition duration-500 grayscale mt-35 hover:grayscale-0"
           />
