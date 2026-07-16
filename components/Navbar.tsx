@@ -14,10 +14,10 @@ function Navbar() {
             <button
               key={item}
               onClick={() => setActive(item)}
-              className={`group relative pb-2 font-orbitron text-sm font-medium tracking-widest transition-colors duration-300 ${
+              className={`group relative pb-2 font-orbitron text-sm font-medium tracking-widest transition-colors duration-300 hover:cursor-pointer ${
                 active === item
-                  ? "text-purple-400"
-                  : "text-white hover:text-purple-400"
+                  ? "text-purple-500"
+                  : "text-white hover:text-purple-500"
               }`}
             >
               {item}
