@@ -6,7 +6,7 @@ function HeroSection() {
   return (
     <section className="relative min-h-screen overflow-hidden">
       {/* Background Hero */}
-      <div className="absolute inset-0 -z-10">
+      <div className="absolute inset-0">
         <SideRays
           rayColor1="#7C3AED"
           rayColor2="#a87ef1"
