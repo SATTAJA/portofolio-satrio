@@ -25,7 +25,7 @@ function HeroSection() {
       {/* Content */}
       <div className="container mx-auto flex min-h-screen items-center justify-between px-10 lg:px-24">
         {/* Left */}
-        <div className="max-w-2xl text-white">
+        <div className="max-w-2xl text-white -mt-10 ">
           <div className="mb-2 flex items-center gap-3">
             <span className="rounded bg-purple-500 px-3 py-1 font-mono text-sm shadow-lg shadow-purple-600/40">
               Hello World!
@@ -55,7 +55,7 @@ function HeroSection() {
         </div>
 
         {/* Right */}
-        <div className="hidden lg:block hover:cursor-crosshair">
+        <div className="hidden lg:block hover:cursor-crosshair mt-11">
           <Image
             src="/ganteng.png"
             alt="Satrio Aji Kusumo"
