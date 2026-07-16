@@ -62,7 +62,7 @@ function HeroSection() {
             width={480}
             height={600}
             priority
-            className="transition duration-500 grayscale mt-30 hover:grayscale-0"
+            className="transition duration-500 grayscale mt-35 hover:grayscale-0"
           />
         </div>
       </div>
