@@ -23,24 +23,24 @@ function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto flex min-h-screen items-center justify-between px-10 lg:px-24">
+      <div className="relative z-10 mx-auto flex min-h-screen items-center px-5 sm:px-8 lg:container lg:justify-between lg:px-24">
         {/* Left */}
         <div className="max-w-2xl -mt-10 text-white">
-          <div className="mb-2 flex items-center gap-3">
-            <span className="rounded bg-purple-500 px-3 py-1 font-mono text-sm shadow-lg shadow-purple-600/40">
+          <div className="mb-2 flex flex-wrap items-center gap-2 sm:gap-3">
+            <span className="rounded bg-purple-500 px-2 py-1 font-mono text-xs shadow-lg shadow-purple-600/40 sm:px-3 sm:text-sm">
               Hello World!
             </span>
 
-            <span className="font-mono text-lg text-gray-300">
+            <span className="font-mono text-sm text-gray-300 sm:text-lg">
               My name is
             </span>
           </div>
 
-          <h1 className="mb-4 text-6xl font-bold leading-tight lg:text-7xl">
+          <h1 className="mb-4 text-3xl font-bold leading-tight sm:text-5xl lg:text-7xl">
             Satrio Aji Kusumo
           </h1>
 
-          <div className="mb-6 cursor-default text-2xl font-medium transition-all duration-300">
+          <div className="mb-6 cursor-default text-base font-medium transition-all duration-300 sm:text-xl lg:text-2xl">
             <ScrambledText
               radius={60}
               duration={1.2}
@@ -52,7 +52,7 @@ function HeroSection() {
           </div>
         </div>
 
-        {/* Right */}
+        {/* Right - hidden on mobile, shown on lg+ */}
         <div className="mt-11 hidden hover:cursor-crosshair lg:block">
           <Image
             src="/ganteng.png"
