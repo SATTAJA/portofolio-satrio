@@ -49,7 +49,7 @@ const SideRays = ({
         const entry = entries[0];
         setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.1 }
+      { threshold: 0 }
     );
 
     observerRef.current.observe(containerRef.current);

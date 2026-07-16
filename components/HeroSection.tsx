@@ -4,9 +4,9 @@ import SideRays from "./SideRays";
 
 function HeroSection() {
   return (
-    <section className="relative min-h-screen overflow-hidden">
+    <section className="relative min-h-screen overflow-hidden bg-black">
       {/* Background Hero */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-0">
         <SideRays
           rayColor1="#7C3AED"
           rayColor2="#a87ef1"
@@ -23,9 +23,9 @@ function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="container mx-auto flex min-h-screen items-center justify-between px-10 lg:px-24">
+      <div className="relative z-10 container mx-auto flex min-h-screen items-center justify-between px-10 lg:px-24">
         {/* Left */}
-        <div className="max-w-2xl text-white -mt-10 ">
+        <div className="max-w-2xl -mt-10 text-white">
           <div className="mb-2 flex items-center gap-3">
             <span className="rounded bg-purple-500 px-3 py-1 font-mono text-sm shadow-lg shadow-purple-600/40">
               Hello World!
@@ -40,7 +40,7 @@ function HeroSection() {
             Satrio Aji Kusumo
           </h1>
 
-          <div className="mb-6 text-2xl font-medium hover:cursor-default transition-all duration-300">
+          <div className="mb-6 cursor-default text-2xl font-medium transition-all duration-300">
             <ScrambledText
               radius={60}
               duration={1.2}
@@ -50,19 +50,17 @@ function HeroSection() {
               Frontend-Focused Full Stack Developer
             </ScrambledText>
           </div>
-
-
         </div>
 
         {/* Right */}
-        <div className="hidden lg:block hover:cursor-crosshair mt-11">
+        <div className="mt-11 hidden hover:cursor-crosshair lg:block">
           <Image
             src="/ganteng.png"
             alt="Satrio Aji Kusumo"
             width={600}
             height={300}
             priority
-            className="transition duration-500 grayscale mt-35 hover:grayscale-0"
+            className="mt-35 grayscale transition duration-500 hover:grayscale-0"
           />
         </div>
       </div>
