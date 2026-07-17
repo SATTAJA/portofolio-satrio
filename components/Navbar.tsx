@@ -1,12 +1,69 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { List, X } from "@phosphor-icons/react";
 
+const navItems = ["HOME", "ABOUT", "PROJECT", "CONTACT"] as const;
+type NavItem = (typeof navItems)[number];
+
+const sectionMap: Record<NavItem, string> = {
+  HOME: "home",
+  ABOUT: "about",
+  PROJECT: "project",
+  CONTACT: "contact",
+};
+
+function scrollTo(id: string) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const lenis = (window as unknown as Record<string, unknown>).__lenis as
+    | { scrollTo: (target: Element | string, opts?: Record<string, unknown>) => void }
+    | undefined;
+  if (lenis) {
+    lenis.scrollTo(el, { offset: 0, duration: 1.5 });
+  } else {
+    el.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
 function Navbar() {
-  const navItems = ["HOME", "ABOUT", "PROJECT", "CONTACT"];
-  const [active, setActive] = useState("HOME");
+  const [active, setActive] = useState<NavItem>("HOME");
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleClick = useCallback(
+    (item: NavItem) => {
+      setActive(item);
+      scrollTo(sectionMap[item]);
+    },
+    [],
+  );
+
+  useEffect(() => {
+    const ids = Object.values(sectionMap);
+    const observers: IntersectionObserver[] = [];
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const match = Object.entries(sectionMap).find(([, v]) => v === id);
+              if (match) setActive(match[0] as NavItem);
+            }
+          });
+        },
+        { rootMargin: "-40% 0px -55% 0px" },
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
+  }, []);
 
   return (
     <nav className="fixed inset-x-0 top-0 z-[9999]">
@@ -16,7 +73,7 @@ function Navbar() {
           {navItems.map((item) => (
             <button
               key={item}
-              onClick={() => setActive(item)}
+              onClick={() => handleClick(item)}
               className={`group relative pb-2 font-orbitron text-sm font-medium tracking-widest transition-colors duration-300 hover:cursor-pointer ${
                 active === item
                   ? "text-purple-500"
@@ -70,7 +127,7 @@ function Navbar() {
             <button
               key={item}
               onClick={() => {
-                setActive(item);
+                handleClick(item);
                 setMobileOpen(false);
               }}
               className={`rounded-xl px-4 py-3 text-left font-orbitron text-sm font-medium tracking-widest transition-colors duration-300 hover:cursor-pointer ${
