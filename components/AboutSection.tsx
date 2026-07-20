@@ -5,7 +5,10 @@ import SkillsGrid from "./SkillsGrid";
 
 function AboutSection() {
   return (
-    <section id="about" className="mx-auto max-w-7xl px-4 py-16 text-white sm:px-6 sm:py-24">
+    <section
+      id="about"
+      className="mx-auto px-4 py-16 text-white sm:px-6 sm:py-24"
+    >
       {/* Heading */}
       <div className="mb-8 text-center font-orbitron text-2xl font-bold sm:text-4xl">
         <ScrollFloat
@@ -20,21 +23,26 @@ function AboutSection() {
       </div>
 
       {/* About */}
-      <div className="mx-auto mb-16 max-w-7xl font-mono text-base leading-8 text-gray-300 sm:mb-20 sm:text-lg sm:leading-9">
+      <div className="mx-auto mb-16 font-mono text-base leading-8 text-gray-300 sm:mb-20 sm:text-lg sm:leading-9">
         <ScrollReveal
           baseOpacity={0.1}
           enableBlur
           baseRotation={3}
           blurStrength={4}
         >
-          I'm Satrio Aji Kusumo, a Software Engineering student and a
-          frontend-focused Full Stack Developer from Indonesia. I enjoy
-          building modern web and mobile applications that combine clean
-          design, intuitive user experiences, and scalable solutions. I believe
-          great software is more than just writing code—it's about solving
-          real-world problems and creating meaningful experiences for users.
-          I'm constantly learning new technologies and challenging myself
-          through real-world projects to grow as a developer.
+          I'm Satrio Aji Kusumo, a Software and Game Development (PPLG) student
+          at SMKN 8 Semarang, Indonesia, with a strong passion for software
+          development. I am currently seeking an internship (PKL) to gain
+          hands-on industry experience, improve my technical skills, and learn
+          how professional software development teams build real-world
+          applications. My primary focus is web development, where I enjoy
+          creating modern, responsive, and user-friendly applications. I am
+          continuously learning new technologies, building personal projects,
+          and improving my problem-solving abilities to become a better
+          developer every day. My goal is to grow into a professional Software
+          Developer who creates reliable, scalable, and impactful digital
+          solutions while continuously adapting to new technologies and industry
+          best practices.
         </ScrollReveal>
       </div>
 

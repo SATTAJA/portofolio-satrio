@@ -47,7 +47,7 @@ function HeroSection() {
               speed={0.5}
               scrambleChars=".:"
             >
-              Frontend-Focused Full Stack Developer
+              PPLG Student From SMK Negeri 8 Semarang
             </ScrambledText>
           </div>
         </div>
