@@ -169,66 +169,7 @@ export default function SkillsGrid() {
         </div>
       </div>
 
-      {/* ── Bento Grid ──────────────────────────── */}
-      <div
-        ref={bentoRef}
-        className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 md:auto-rows-[120px] lg:auto-rows-[140px]"
-      >
-        {allSkills.map((skill, i) => {
-          const Icon = skill.icon;
-          const isFeatured = skill.featured;
-          return (
-            <div
-              key={skill.name}
-              ref={(el) => { tiltRefs.current[i] = el; }}
-              className={`bento-card group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 transition-shadow duration-500 hover:border-white/[0.12] hover:shadow-[0_0_40px_-10px] sm:p-6 ${skill.span || ""}`}
-              style={{ transformStyle: "preserve-3d" }}
-              onMouseMove={(e) => handleMouseMove(e, i)}
-              onMouseLeave={(e) => handleMouseLeave(e, i)}
-            >
-              {/* Radial glow follows cursor */}
-              <div className="card-glow pointer-events-none absolute inset-0 z-0 transition-opacity duration-300" />
-
-              {/* Top accent line */}
-              <div
-                className="absolute top-0 left-0 h-[2px] w-full opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                style={{
-                  background: `linear-gradient(90deg, transparent, ${skill.color}, transparent)`,
-                }}
-              />
-
-              {/* Bottom-left color dot */}
-              <div
-                className="absolute bottom-4 right-4 h-20 w-20 rounded-full opacity-[0.04] blur-2xl transition-opacity duration-500 group-hover:opacity-[0.12]"
-                style={{ backgroundColor: skill.color }}
-              />
-
-              {/* Content */}
-              <div className="relative z-10 flex h-full flex-col" style={{ transform: "translateZ(20px)" }}>
-                <Icon
-                  weight="duotone"
-                  className={`mb-3 transition-transform duration-500 group-hover:scale-110 ${isFeatured ? "h-9 w-9 sm:h-11 sm:w-11" : "h-7 w-7 sm:h-8 sm:w-8"}`}
-                  style={{ color: skill.color }}
-                />
-                <span
-                  className={`font-orbitron font-semibold tracking-wide text-gray-200 transition-colors duration-300 group-hover:text-white ${isFeatured ? "text-sm sm:text-base" : "text-xs sm:text-sm"}`}
-                >
-                  {skill.name}
-                </span>
-
-                {isFeatured && (
-                  <span className="mt-auto font-mono text-[10px] tracking-wider text-gray-500 uppercase">
-                    {skill.name === "JavaScript" && "Core Language"}
-                    {skill.name === "TypeScript" && "Type Safety"}
-                    {skill.name === "React" && "UI Library"}
-                    {skill.name === "Next.js" && "React Framework"}
-                  </span>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      
     </div>
   );
 }
