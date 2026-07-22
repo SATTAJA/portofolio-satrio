@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useMemo } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight, GithubLogo, ArrowLeft } from "@phosphor-icons/react";
 import Link from "next/link";
 import ProjectPreview from "@/components/ProjectPreview";
 import { projects, type Project } from "@/lib/projects";
+import { isMobile } from "@/lib/utils";
 import type { MouseEvent } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,9 +21,11 @@ const statusColor: Record<Project["status"], string> = {
 export default function ProjectsPage() {
   const gridRef = useRef<HTMLDivElement>(null);
   const tiltRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const mobile = useMemo(() => isMobile(), []);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLDivElement>, index: number) => {
+      if (mobile) return;
       const card = tiltRefs.current[index];
       if (!card) return;
       const rect = card.getBoundingClientRect();
@@ -46,11 +49,12 @@ export default function ProjectsPage() {
         glow.style.background = `radial-gradient(circle 250px at ${x}px ${y}px, rgba(168,85,247,0.12), transparent)`;
       }
     },
-    [],
+    [mobile],
   );
 
   const handleMouseLeave = useCallback(
     (_e: MouseEvent<HTMLDivElement>, index: number) => {
+      if (mobile) return;
       const card = tiltRefs.current[index];
       if (!card) return;
       gsap.to(card, {
@@ -62,7 +66,7 @@ export default function ProjectsPage() {
       const glow = card.querySelector(".cursor-glow") as HTMLElement;
       if (glow) glow.style.background = "transparent";
     },
-    [],
+    [mobile],
   );
 
   useEffect(() => {
@@ -72,14 +76,16 @@ export default function ProjectsPage() {
 
       gsap.fromTo(
         cards,
-        { opacity: 0, y: 60, scale: 0.95 },
+        mobile
+          ? { opacity: 0, y: 30 }
+          : { opacity: 0, y: 60, scale: 0.95 },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 0.7,
+          duration: mobile ? 0.5 : 0.7,
           ease: "power3.out",
-          stagger: { each: 0.08, from: "start" },
+          stagger: { each: mobile ? 0.05 : 0.08, from: "start" },
           scrollTrigger: {
             trigger: gridRef.current,
             start: "top 90%",
@@ -90,7 +96,7 @@ export default function ProjectsPage() {
     }, gridRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [mobile]);
 
   return (
     <main className="min-h-screen bg-black">
@@ -139,7 +145,7 @@ export default function ProjectsPage() {
                 tiltRefs.current[i] = el;
               }}
               className="project-card group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.015]"
-              style={{ transformStyle: "preserve-3d" }}
+              style={mobile ? undefined : { transformStyle: "preserve-3d" }}
               onMouseMove={(e) => handleMouseMove(e, i)}
               onMouseLeave={(e) => handleMouseLeave(e, i)}
             >

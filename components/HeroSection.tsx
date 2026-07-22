@@ -57,9 +57,11 @@ function HeroSection() {
           <Image
             src="/ganteng.png"
             alt="Satrio Aji Kusumo"
-            width={600}
-            height={300}
+            width={480}
+            height={240}
             priority
+            sizes="(min-width: 1024px) 480px, 0px"
+            quality={80}
             className="mt-35 grayscale transition duration-500 hover:grayscale-0"
           />
         </div>

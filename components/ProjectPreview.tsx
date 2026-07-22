@@ -16,12 +16,18 @@ export default function ProjectPreview({
   size = "small",
 }: ProjectPreviewProps) {
   const [iframeFailed, setIframeFailed] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
 
   const handleIframeError = useCallback(() => {
     setIframeFailed(true);
   }, []);
 
+  const handleImageError = useCallback(() => {
+    setImageFailed(true);
+  }, []);
+
   const showIframe = project.previewUrl && !iframeFailed;
+  const showImage = project.imageUrl && !imageFailed && !showIframe;
   const hasLive = project.liveUrl && project.liveUrl !== "#";
   const hasGithub = project.githubUrl && project.githubUrl !== "#";
 
@@ -88,8 +94,19 @@ export default function ProjectPreview({
         </>
       )}
 
-      {/* Fallback when no previewUrl or iframe failed */}
-      {(!project.previewUrl || iframeFailed) && (
+      {/* Image preview */}
+      {showImage && (
+        <img
+          src={project.imageUrl}
+          alt={`${project.title} preview`}
+          loading="lazy"
+          onError={handleImageError}
+          className="absolute inset-0 h-full w-full object-cover object-top"
+        />
+      )}
+
+      {/* Fallback when no previewUrl/imageUrl or both failed */}
+      {(!project.previewUrl || iframeFailed) && (!project.imageUrl || imageFailed) && (
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
           <span
             className={`mb-2 transition-transform duration-700 group-hover:scale-110 ${

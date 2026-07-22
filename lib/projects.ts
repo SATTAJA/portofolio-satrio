@@ -9,6 +9,8 @@ export interface Project {
   githubUrl?: string;
   /** URL untuk preview iframe, kosongkan jika tidak ada */
   previewUrl?: string;
+  /** URL gambar screenshot, kosongkan jika tidak ada */
+  imageUrl?: string;
   gradient: string;
   orbColor: string;
   status: "LIVE" | "IN PROGRESS" | "COMING SOON";
@@ -48,7 +50,7 @@ export const projects: Project[] = [
     ],
     liveUrl: "",
     githubUrl: "https://github.com/example/taskapp",
-    previewUrl: "",
+    imageUrl: "https://cdn.phototourl.com/free/2026-07-22-0fba5f23-e153-4a54-ae3b-078e56794083.png",
     gradient: "from-cyan-600/40 via-emerald-600/20 to-teal-600/10",
     orbColor: "#06B6D4",
     status: "LIVE",

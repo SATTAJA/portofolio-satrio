@@ -50,7 +50,7 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif, orbitron, JetBrainsMono ;
+  font-family: Arial, Helvetica, sans-serif, orbitron, JetBrainsMono;
 }
 
 :root {
@@ -96,12 +96,38 @@ body {
   }
   html {
     @apply font-mono;
+    scroll-behavior: auto;
+  }
+}
+
+/* Promote heavy layers to own compositing layer */
+.project-card,
+.side-rays-container,
+.cursor-glow {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Contain only leaf elements — NOT sections (breaks GSAP absolute positioning) */
+.side-rays-container {
+  contain: layout paint;
+}
+
+/* Reduce motion for accessibility + low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    animation: none !important;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
 /* Marquee infinite scroll */
 .marquee {
   animation: marquee 40s linear infinite;
+  will-change: transform;
 }
 
 .marquee:hover {

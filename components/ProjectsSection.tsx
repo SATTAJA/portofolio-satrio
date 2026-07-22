@@ -8,6 +8,7 @@ import Link from "next/link";
 import ScrollFloat from "./ScrollFloat";
 import ProjectPreview from "./ProjectPreview";
 import { projects, type Project } from "@/lib/projects";
+import { isMobile } from "@/lib/utils";
 import type { MouseEvent } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -33,12 +34,14 @@ export default function ProjectsSection({
   );
 
   const hasMore = limit ? projects.length > limit : false;
+  const mobile = useMemo(() => isMobile(), []);
 
   const gridRef = useRef<HTMLDivElement>(null);
   const tiltRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLDivElement>, index: number) => {
+      if (mobile) return;
       const card = tiltRefs.current[index];
       if (!card) return;
       const rect = card.getBoundingClientRect();
@@ -62,11 +65,12 @@ export default function ProjectsSection({
         glow.style.background = `radial-gradient(circle 300px at ${x}px ${y}px, rgba(168,85,247,0.12), transparent)`;
       }
     },
-    [],
+    [mobile],
   );
 
   const handleMouseLeave = useCallback(
     (_e: MouseEvent<HTMLDivElement>, index: number) => {
+      if (mobile) return;
       const card = tiltRefs.current[index];
       if (!card) return;
       gsap.to(card, {
@@ -78,7 +82,7 @@ export default function ProjectsSection({
       const glow = card.querySelector(".cursor-glow") as HTMLElement;
       if (glow) glow.style.background = "transparent";
     },
-    [],
+    [mobile],
   );
 
   useEffect(() => {
@@ -88,18 +92,20 @@ export default function ProjectsSection({
 
       gsap.fromTo(
         cards,
-        { opacity: 0, y: 100, rotateX: 8, scale: 0.96 },
+        mobile
+          ? { opacity: 0, y: 40 }
+          : { opacity: 0, y: 100, rotateX: 8, scale: 0.96 },
         {
           opacity: 1,
           y: 0,
           rotateX: 0,
           scale: 1,
-          duration: 0.9,
+          duration: mobile ? 0.6 : 0.9,
           ease: "power3.out",
-          stagger: { each: 0.15, from: "start" },
+          stagger: { each: mobile ? 0.08 : 0.15, from: "start" },
           scrollTrigger: {
             trigger: gridRef.current,
-            start: "top 82%",
+            start: "top 85%",
             toggleActions: "play none none none",
           },
         },
@@ -107,7 +113,7 @@ export default function ProjectsSection({
     }, gridRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [mobile]);
 
   return (
     <section
@@ -142,7 +148,7 @@ export default function ProjectsSection({
                 tiltRefs.current[i] = el;
               }}
               className="project-card group relative overflow-hidden rounded-3xl border border-white/[0.06] bg-white/[0.015]"
-              style={{ transformStyle: "preserve-3d" }}
+              style={mobile ? undefined : { transformStyle: "preserve-3d" }}
               onMouseMove={(e) => handleMouseMove(e, i)}
               onMouseLeave={(e) => handleMouseLeave(e, i)}
             >

@@ -78,6 +78,7 @@ export default function SkillsGrid() {
                 alt={skill.name}
                 width={18}
                 height={18}
+                sizes="18px"
                 className="h-[18px] w-[18px] object-contain"
               />
               <span className="font-mono text-xs font-medium text-gray-400">{skill.name}</span>

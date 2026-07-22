@@ -1,8 +1,8 @@
 "use client";
 
-import { useRef, useEffect, useState } from 'react';
-import { Renderer, Program, Triangle, Mesh } from 'ogl';
-import './SideRays.css';
+import { useRef, useEffect, useState } from "react";
+import { Renderer, Program, Triangle, Mesh } from "ogl";
+import "./SideRays.css";
 
 const hexToRgb = hex => {
   const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -11,31 +11,39 @@ const hexToRgb = hex => {
 
 const originToFlip = origin => {
   switch (origin) {
-    case 'top-left': return [1, 0];
-    case 'bottom-right': return [0, 1];
-    case 'bottom-left': return [1, 1];
+    case "top-left": return [1, 0];
+    case "bottom-right": return [0, 1];
+    case "bottom-left": return [1, 1];
     default: return [0, 0];
   }
 };
 
+const isMobileDevice = () => typeof window !== "undefined" && (window.innerWidth < 768 || "ontouchstart" in window);
+
+const getDpr = () => {
+  if (typeof window === "undefined") return 1;
+  if (isMobileDevice()) return 0.75;
+  return Math.min(window.devicePixelRatio, 2);
+};
+
 const SideRays = ({
   speed = 2.5,
-  rayColor1 = '#EAB308',
-  rayColor2 = '#96c8ff',
+  rayColor1 = "#EAB308",
+  rayColor2 = "#96c8ff",
   intensity = 2,
   spread = 2,
-  origin = 'top-right',
+  origin = "top-right",
   tilt = 0,
   saturation = 1.5,
   blend = 0.75,
   falloff = 1.6,
   opacity = 1.0,
-  className = ''
+  className = "",
 }) => {
   const containerRef = useRef(null);
   const uniformsRef = useRef(null);
   const rendererRef = useRef(null);
-  const animationIdRef = useRef(null);
+  const animationIdRef = useRef(0);
   const meshRef = useRef(null);
   const cleanupFunctionRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -46,10 +54,9 @@ const SideRays = ({
 
     observerRef.current = new IntersectionObserver(
       entries => {
-        const entry = entries[0];
-        setIsVisible(entry.isIntersecting);
+        setIsVisible(entries[0].isIntersecting);
       },
-      { threshold: 0 }
+      { threshold: 0 },
     );
 
     observerRef.current.observe(containerRef.current);
@@ -70,35 +77,32 @@ const SideRays = ({
       cleanupFunctionRef.current = null;
     }
 
-    const initializeWebGL = async () => {
-      if (!containerRef.current) return;
+    const mobile = isMobileDevice();
+    const targetFps = mobile ? 30 : 60;
+    const frameInterval = 1000 / targetFps;
 
-      await new Promise(resolve => setTimeout(resolve, 10));
+    const renderer = new Renderer({
+      dpr: getDpr(),
+      alpha: true,
+    });
+    rendererRef.current = renderer;
 
-      if (!containerRef.current) return;
+    const gl = renderer.gl;
+    gl.canvas.style.width = "100%";
+    gl.canvas.style.height = "100%";
 
-      const renderer = new Renderer({
-        dpr: Math.min(window.devicePixelRatio, 2),
-        alpha: true
-      });
-      rendererRef.current = renderer;
+    while (containerRef.current.firstChild) {
+      containerRef.current.removeChild(containerRef.current.firstChild);
+    }
+    containerRef.current.appendChild(gl.canvas);
 
-      const gl = renderer.gl;
-      gl.canvas.style.width = '100%';
-      gl.canvas.style.height = '100%';
-
-      while (containerRef.current.firstChild) {
-        containerRef.current.removeChild(containerRef.current.firstChild);
-      }
-      containerRef.current.appendChild(gl.canvas);
-
-      const vert = `
+    const vert = `
 attribute vec2 position;
 void main() {
   gl_Position = vec4(position, 0.0, 1.0);
 }`;
 
-      const frag = `precision highp float;
+    const frag = `precision highp float;
 
 uniform float iTime;
 uniform vec2 iResolution;
@@ -159,74 +163,80 @@ void main() {
   gl_FragColor = color;
 }`;
 
-      const [flipX, flipY] = originToFlip(origin);
-      const uniforms = {
-        iTime: { value: 0 },
-        iResolution: { value: [1, 1] },
-        iSpeed: { value: speed },
-        iRayColor1: { value: hexToRgb(rayColor1) },
-        iRayColor2: { value: hexToRgb(rayColor2) },
-        iIntensity: { value: intensity },
-        iSpread: { value: spread },
-        iFlipX: { value: flipX },
-        iFlipY: { value: flipY },
-        iTilt: { value: tilt },
-        iSaturation: { value: saturation },
-        iBlend: { value: blend },
-        iFalloff: { value: falloff },
-        iOpacity: { value: opacity }
-      };
-      uniformsRef.current = uniforms;
+    const [flipX, flipY] = originToFlip(origin);
+    const uniforms = {
+      iTime: { value: 0 },
+      iResolution: { value: [1, 1] },
+      iSpeed: { value: speed },
+      iRayColor1: { value: hexToRgb(rayColor1) },
+      iRayColor2: { value: hexToRgb(rayColor2) },
+      iIntensity: { value: intensity },
+      iSpread: { value: spread },
+      iFlipX: { value: flipX },
+      iFlipY: { value: flipY },
+      iTilt: { value: tilt },
+      iSaturation: { value: saturation },
+      iBlend: { value: blend },
+      iFalloff: { value: falloff },
+      iOpacity: { value: opacity },
+    };
+    uniformsRef.current = uniforms;
 
-      const geometry = new Triangle(gl);
-      const program = new Program(gl, { vertex: vert, fragment: frag, uniforms });
-      const mesh = new Mesh(gl, { geometry, program });
-      meshRef.current = mesh;
+    const geometry = new Triangle(gl);
+    const program = new Program(gl, { vertex: vert, fragment: frag, uniforms });
+    const mesh = new Mesh(gl, { geometry, program });
+    meshRef.current = mesh;
 
-      const updateSize = () => {
-        if (!containerRef.current || !renderer) return;
-        renderer.dpr = Math.min(window.devicePixelRatio, 2);
-        const { clientWidth: w, clientHeight: h } = containerRef.current;
-        renderer.setSize(w, h);
-        uniforms.iResolution.value = [w * renderer.dpr, h * renderer.dpr];
-      };
-
-      const loop = t => {
-        if (!rendererRef.current || !uniformsRef.current || !meshRef.current) return;
-        uniforms.iTime.value = t * 0.001;
-        try {
-          renderer.render({ scene: mesh });
-          animationIdRef.current = requestAnimationFrame(loop);
-        } catch (e) {
-          return;
-        }
-      };
-
-      window.addEventListener('resize', updateSize);
-      updateSize();
-      animationIdRef.current = requestAnimationFrame(loop);
-
-      cleanupFunctionRef.current = () => {
-        if (animationIdRef.current) {
-          cancelAnimationFrame(animationIdRef.current);
-          animationIdRef.current = null;
-        }
-        window.removeEventListener('resize', updateSize);
-        if (renderer) {
-          try {
-            const loseCtx = renderer.gl.getExtension('WEBGL_lose_context');
-            if (loseCtx) loseCtx.loseContext();
-            const canvas = renderer.gl.canvas;
-            if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
-          } catch (e) {}
-        }
-        rendererRef.current = null;
-        uniformsRef.current = null;
-        meshRef.current = null;
-      };
+    const updateSize = () => {
+      if (!containerRef.current || !renderer) return;
+      renderer.dpr = getDpr();
+      const { clientWidth: w, clientHeight: h } = containerRef.current;
+      renderer.setSize(w, h);
+      uniforms.iResolution.value = [w * renderer.dpr, h * renderer.dpr];
     };
 
-    initializeWebGL();
+    let running = true;
+    let lastFrameTime = 0;
+    const loop = t => {
+      if (!running || !rendererRef.current || !uniformsRef.current || !meshRef.current) return;
+
+      const delta = t - lastFrameTime;
+      if (delta < frameInterval) {
+        animationIdRef.current = requestAnimationFrame(loop);
+        return;
+      }
+      lastFrameTime = t - (delta % frameInterval);
+
+      uniforms.iTime.value = t * 0.001;
+      try {
+        renderer.render({ scene: mesh });
+      } catch {}
+      animationIdRef.current = requestAnimationFrame(loop);
+    };
+
+    window.addEventListener("resize", updateSize);
+    updateSize();
+    animationIdRef.current = requestAnimationFrame(loop);
+
+    cleanupFunctionRef.current = () => {
+      running = false;
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = 0;
+      }
+      window.removeEventListener("resize", updateSize);
+      if (renderer) {
+        try {
+          const loseCtx = renderer.gl.getExtension("WEBGL_lose_context");
+          if (loseCtx) loseCtx.loseContext();
+          const canvas = renderer.gl.canvas;
+          if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+        } catch {}
+      }
+      rendererRef.current = null;
+      uniformsRef.current = null;
+      meshRef.current = null;
+    };
 
     return () => {
       if (cleanupFunctionRef.current) {
